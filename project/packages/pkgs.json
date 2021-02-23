@@ -1,0 +1,12 @@
+[
+ {
+  "path": "/packages/peripherals/sht3x", 
+  "ver": "v1.0.0", 
+  "name": "SHT3X"
+ }, 
+ {
+  "path": "/packages/peripherals/button", 
+  "ver": "v1.0.1", 
+  "name": "BUTTON"
+ }
+]

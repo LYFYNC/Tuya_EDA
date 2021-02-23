@@ -1,0 +1,24 @@
+from building import *
+import rtconfig
+
+cwd = GetCurrentDir()
+list = os.listdir(cwd)
+objs = []
+
+src = Split('''
+        button_control.c
+        wifi_led.c
+        sht3x_update.c
+        cloudy.c
+        sunshine.c
+        rain.c
+        time_update.c
+        weather.c
+        ''')
+
+CPPPATH = [cwd]
+
+group = DefineGroup('user', src, depend = [''], CPPPATH = CPPPATH)
+
+
+Return('group')

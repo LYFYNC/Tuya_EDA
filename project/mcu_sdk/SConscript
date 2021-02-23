@@ -1,0 +1,19 @@
+from building import *
+import rtconfig
+
+cwd = GetCurrentDir()
+list = os.listdir(cwd)
+objs = []
+
+src = Split('''
+        mcu_api.c
+        protocol.c
+        system.c
+        ''')
+
+CPPPATH = [cwd]
+
+group = DefineGroup('mcu_sdk', src, depend = [''], CPPPATH = CPPPATH)
+
+
+Return('group')
