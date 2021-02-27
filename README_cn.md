@@ -6,11 +6,25 @@
 
 ### 1：简述
 
-  该项目采用4.2V锂电池供电，可使用type-c接口进行充电，主控采用W601，使用Tuya快速开发WBR3模组开发，配有2.4寸显示屏，可外接TF卡，使用AW8697驱动线性马达。
+  该项目采用4.2V锂电池供电，可使用type-c接口进行充电，主控采用W601，使用Tuya快速开发WBR3模组开发，配有2.4寸显示屏，可外接TF卡，使用AW8697驱动线性马达,界面显示使用lvgl。
 
 ### 2：功能
 
 - LCD显示从网络获取的实时时间和天气预报
+
 - LCD显示室内温湿度
+
 - 支持设置闹钟提醒，线性马达震动提醒
+
 - 支持温湿度阈值设置提醒
+
+  ###  链接
+
+  主板工程立创EDA：https://oshwhub.com/xiaobaigou/tuya-eda
+
+  涂鸦智能：https://www.tuya.com/cn
+
+  littlevgl：https://littlevgl.cn/
+
+  W601使用指南：http://www.openedv.com/docs/boards/iot/zdyz_w601.html
+
