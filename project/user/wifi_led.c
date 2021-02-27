@@ -22,7 +22,7 @@ static void WifiLedEntry(void *parameter)
 {
 	  static unsigned char state;
 	  state = mcu_get_wifi_work_state();
-	  rt_kprintf("wifi state %d\n");
+	  rt_kprintf("wifi state %d\n", state);
     while(1)
 		{
         state = mcu_get_wifi_work_state();
@@ -40,15 +40,19 @@ static void WifiLedEntry(void *parameter)
 						break;
 					case WIFI_NOT_CONNECTED:
 						rt_pin_write(LED_PIN, 1);
+					  rt_thread_mdelay(1000);
 						break;
 					case WIFI_CONNECTED:
 						rt_pin_write(LED_PIN, 0);
+					  rt_thread_mdelay(1000);
 						break;
 					case WIFI_CONN_CLOUD:
 						rt_pin_write(LED_PIN, 0);
+					  rt_thread_mdelay(1000);
 						break;
 					case WIFI_LOW_POWER:
 						rt_pin_write(LED_PIN, 1);
+					  rt_thread_mdelay(1000);
 						break;
 					case SMART_AND_AP_STATE:
 						rt_pin_write(LED_PIN, led_status);
@@ -56,9 +60,10 @@ static void WifiLedEntry(void *parameter)
 					  rt_thread_mdelay(250);
 						break;
 					default: 
-						rt_thread_mdelay(20);
+						rt_thread_mdelay(1000);
 						break;
 				}
+				bili.wifi_state = state;
 		}
 }
 

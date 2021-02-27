@@ -5,7 +5,7 @@
 #include <rtdevice.h>
 #include <board.h>
 #include <stdbool.h>
-
+#include "global_conf.h"
 #include "wifi.h"
 
 #define WIFI_LED_STACK_SIZE  512

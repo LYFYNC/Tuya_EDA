@@ -4,9 +4,10 @@
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <board.h>
-
+#include "global_conf.h"
 #include "drv_lcd.h"
-
+#include "wifi.h"
+#include "gui.h"
 
 #define TIME_UPDATE_STACK_SIZE 1024
 #define TIME_UPDATE_PRIORITY   20

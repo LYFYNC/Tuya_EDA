@@ -554,7 +554,7 @@ void wifi_test_result(unsigned char result,unsigned char rssi)
 {
 //    #error "请自行实现wifi功能测试成功/失败代码,完成后请删除该行"
     if(result == 0) {
-			rt_kprintf("test failed\n");
+			rt_kprintf("wifi net connect failed %d\n", rssi);
         //测试失败
         if(rssi == 0x00) {
             //未扫描到名称为tuya_mdev_test路由器,请检查
@@ -564,7 +564,7 @@ void wifi_test_result(unsigned char result,unsigned char rssi)
     }else {
         //测试成功
         //rssi为信号强度(0-100, 0信号最差，100信号最强)
-						rt_kprintf("test success\n");
+						rt_kprintf("wifi net connect success %d\n", rssi);
     }
 }
 #endif
@@ -640,11 +640,7 @@ void weather_open_return_handle(unsigned char res, unsigned char err)
  * @return Null
  * @note   MCU需要自行实现该功能
  */
-extern unsigned char gGetWeatherCondition(char *buff);
-extern void gWeatherContitionDisplay(unsigned char state);
-extern void gWeatherTempDisplay(uint32_t temp);
-extern void gWeatherHumidityDisplay(uint32_t humidity);
-extern void gWeatherPm25Display(uint32_t pm25);
+#include "weather.h"
 static unsigned char weather_condition;
 void weather_data_user_handle(char *name, unsigned char type, const unsigned char *data, char day)
 {
@@ -664,23 +660,21 @@ void weather_data_user_handle(char *name, unsigned char type, const unsigned cha
     //注意要根据所选参数类型来获得参数值！！！
     if(my_strcmp(name, "temp") == 0) {
         printf("day:%d temp value is:%d\r\n", day, value_int);          //int 型
-			  gWeatherTempDisplay(value_int);
+			  weather.temp = value_int;
     }else if(my_strcmp(name, "humidity") == 0) {
         printf("day:%d humidity value is:%d\r\n", day, value_int);      //int 型
-			  gWeatherHumidityDisplay(value_int);
+			  weather.humidity = value_int;
     }else if(my_strcmp(name, "pm25") == 0) {
         printf("day:%d pm25 value is:%d\r\n", day, value_int);          //int 型
-			  gWeatherPm25Display(value_int);
+			  weather.pm25 = value_int;
+			  weather.update = true;
     }else if(my_strcmp(name, "condition") == 0) {
         printf("day:%d condition value is:%s\r\n", day, value_string);  //string 型
 			  if(0 == day)
 				{
 				    weather_condition = gGetWeatherCondition(value_string);
-				}
-
-			  if(1)    //若lcd显示主页面，则刷新今天天气
-				{
-				    gWeatherContitionDisplay(weather_condition);
+					  memset(weather.condition, 0, 50);
+					  memcpy(weather.condition, value_string, 50);
 				}
     }
 }
@@ -723,7 +717,7 @@ void get_upload_syn_result(unsigned char result)
  */
 void get_wifi_status(unsigned char result)
 {
-  #error "请自行完成获取 WIFI 状态结果代码,并删除该行"
+//  #error "请自行完成获取 WIFI 状态结果代码,并删除该行"
  
     switch(result) {
         case 0:

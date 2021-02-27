@@ -5,16 +5,7 @@ cwd = GetCurrentDir()
 list = os.listdir(cwd)
 objs = []
 
-src = Split('''
-        button_control.c
-        wifi_led.c
-        sht3x_update.c
-        cloudy.c
-        sunshine.c
-        rain.c
-        time_update.c
-        weather.c
-        ''')
+src = Glob('*.c')
 
 CPPPATH = [cwd]
 

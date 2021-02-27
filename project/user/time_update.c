@@ -1,10 +1,10 @@
 #include "time_update.h"
 
-
 static struct rt_thread time_update;
 static char TIME_UPDATE_STACK[TIME_UPDATE_STACK_SIZE];
 
 static time_config tuya_time;
+static time_config last_time;
 
 static void TimeUpdateEntry(void *parameter);
 static void TimeUpdate(time_config time);
@@ -20,71 +20,91 @@ void gTimeUpdateInit(void)
 extern void mcu_get_green_time(void);
 static void TimeUpdateEntry(void *parameter)
 {
+	  while(!(WIFI_CONN_CLOUD == bili.wifi_state))
+		{
+		    rt_thread_mdelay(200);
+		}
+	  rt_kprintf("wifi connect internet\n");
+		rt_thread_mdelay(3000);
     while(1)
 		{
 		    mcu_get_green_time();
 			  TimeUpdate(tuya_time);
-			  rt_thread_mdelay(500);
+			  rt_thread_mdelay(100);
 		}
 }
 
 static void TimeUpdate(time_config time)
 {
-	  lcd_show_num(0, 64, 2000 + time.year, 4, 32);
-	  lcd_show_string(16*4, 64, 32, ".");
-	
-	  if(time.month < 10) 
+	  unsigned char days = 0;
+	  if(1 == time.month || 3 == time.month || 5 == time.month || 7 == time.month || 8 == time.month || 10 == time.month || 12 == time.month)
 		{
-			  lcd_show_num(16*5, 64, 0, 1, 32);
-			  lcd_show_num(16*6, 64, time.month, 1, 32);
+		    days = 31;
 		}
-		else
+		else if(4 == time.month || 6 == time.month || 9 == time.month || 11 == time.month)
 		{
-				lcd_show_num(16*5, 64, time.month, 2, 32);
+		    days = 30;
 		}
-	  lcd_show_string(16*7, 64, 32, ".");
+		else if(2 == time.month)
+		{
+		    if((time.year % 400 == 0) || ((time.year % 4 == 0) && (time.year % 100 != 0)))
+				{
+				    days =29;
+				}
+				else
+				{
+				    days = 28;
+				}
+		}
+		time.hour += 8;
+		if(time.hour >= 24)
+		{
+		    time.hour -= 24;
+			  time.day++;
+			  if(time.day > days)
+				{
+				    time.day = 1;
+					  time.month++;
+					  if(time.month > 12)
+						{
+						    time.year++;
+						}
+				}
+		}
 		
-		if(time.day < 10)
+		if(last_time.minuter != time.minuter)
 		{
-        lcd_show_num(16*8, 64, 0, 1, 32);
-			  lcd_show_num(16*9, 64, time.day, 1, 32);
+			  char str[5];
+			  if(time.hour < 10) sprintf(str, "0%d", time.hour);
+			  else sprintf(str, "%d", time.hour);
+			
+			  if(time.minuter < 10) sprintf(str+2, ":0%d", time.minuter);
+			  else sprintf(str+2, ":%d", time.minuter);
+					
+		    lv_label_set_text(label_time, str);
 		}
-		else
-		{
-			  lcd_show_num(16*8, 64, time.day, 2, 32);
-		}
-	
-		if(time.hour < 10)
-		{
-				lcd_show_num(0, 96, 0, 1, 32);
-			  lcd_show_num(16, 96, time.hour, 1, 32);
-		}
-		else
-		{
-			  lcd_show_num(0, 96, time.hour, 2, 32);
-		}
-	  lcd_show_string(16*2, 96, 32, ":");
 		
-		if(time.minuter < 10)
+		if(last_time.day != time.day)
 		{
-				lcd_show_num(16*3, 96, 0, 1, 32);
-			  lcd_show_num(16*4, 96, time.minuter, 1, 32);
+		    char str[10];
+			  if(time.year < 10) sprintf(str, "200%d.", time.year);
+			  else sprintf(str, "20%d.", time.year);
+			
+				if(time.month < 10) sprintf(str+5, "0%d.", time.month);
+			  else sprintf(str+5, "%d.", time.month);
+			
+				if(time.day < 10) sprintf(str+8, "0%d", time.day);
+			  else sprintf(str+8, "%d", time.day);
+			
+				lv_label_set_text(label_date, str);
 		}
-		else
-		{
-			  lcd_show_num(16*3, 96, time.minuter, 2, 32);
-		}
-	  lcd_show_string(16*5, 96, 32, ":");
 		
-		if(time.second < 10)
-		{
-				lcd_show_num(16*6, 96, 0, 1, 32);
-			  lcd_show_num(16*7, 96, time.second, 1, 32);
-		}
-		else
-		{
-			  lcd_show_num(16*6, 96, time.second, 2, 32);
-		}
+		last_time.year = time.year;
+		last_time.month = time.month;
+		last_time.day = time.day;
+		last_time.hour = time.hour;
+		last_time.minuter = time.minuter;
+		
 }
 
 void gWriteTime(unsigned char *buff)

@@ -10,6 +10,9 @@
 #ifndef WM_TIMER_H
 #define WM_TIMER_H
 
+typedef unsigned char u8;
+typedef unsigned int u32;
+
 /** invalid timer id */
 #define WM_TIMER_ID_INVALID              0xFF
 #define TIMER_MS_UNIT_FLAG		1

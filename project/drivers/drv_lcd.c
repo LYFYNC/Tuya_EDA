@@ -21,7 +21,7 @@
 #define DBG_LEVEL           DBG_LOG
 #include <rtdbg.h>
 
-#define LCD_CLEAR_SEND_NUMBER 7680
+#define LCD_CLEAR_SEND_NUMBER 1536
 
 rt_uint16_t BACK_COLOR = WHITE, FORE_COLOR = BLACK;
 
@@ -307,7 +307,7 @@ void lcd_clear(rt_uint16_t color)
         }
 
         rt_pin_write(LCD_DC_PIN, PIN_HIGH);
-        for (i = 0; i < 20; i++)
+        for (i = 0; i < 100; i++)
         {
             rt_spi_send(spi_dev_lcd, buf, LCD_CLEAR_SEND_NUMBER);
         }
@@ -372,7 +372,7 @@ void lcd_fill(rt_uint16_t x_start, rt_uint16_t y_start, rt_uint16_t x_end, rt_ui
     rt_uint32_t size = 0, size_remain = 0;
     rt_uint8_t *fill_buf = RT_NULL;
 
-    size = (x_end - x_start) * (y_end - y_start) * 2;
+    size = (x_end - x_start + 1) * (y_end - y_start + 1) * 2;
 
     if (size > LCD_CLEAR_SEND_NUMBER)
     {
@@ -419,6 +419,64 @@ void lcd_fill(rt_uint16_t x_start, rt_uint16_t y_start, rt_uint16_t x_end, rt_ui
         for (i = y_start; i <= y_end; i++)
         {
             for (j = x_start; j <= x_end; j++)lcd_write_half_word(color);
+        }
+    }
+}
+
+void lcd_color_fill(rt_uint16_t x_start, rt_uint16_t y_start, rt_uint16_t x_end, rt_uint16_t y_end, rt_uint16_t *color)
+{
+    rt_uint16_t i = 0, j = 0;
+    rt_uint32_t size = 0, size_remain = 0;
+    rt_uint8_t *fill_buf = RT_NULL;
+
+    size = (x_end - x_start + 1) * (y_end - y_start + 1) * 2;
+
+    if (size > LCD_CLEAR_SEND_NUMBER)
+    {
+        /* the number of remaining to be filled */
+        size_remain = size - LCD_CLEAR_SEND_NUMBER;
+        size = LCD_CLEAR_SEND_NUMBER;
+    }
+
+    lcd_address_set(x_start, y_start, x_end, y_end);
+
+    fill_buf = (rt_uint8_t *)rt_malloc(size);
+    if (fill_buf)
+    {
+        /* fast fill */
+        while (1)
+        {
+            for (i = 0; i < size / 2; i++)
+            {
+                fill_buf[2 * i] = (*color) >> 8;
+                fill_buf[2 * i + 1] = (*color);
+							  color++;
+            }
+            rt_pin_write(LCD_DC_PIN, PIN_HIGH);
+            rt_spi_send(spi_dev_lcd, fill_buf, size);
+
+            /* Fill completed */
+            if (size_remain == 0)
+                break;
+
+            /* calculate the number of fill next time */
+            if (size_remain > LCD_CLEAR_SEND_NUMBER)
+            {
+                size_remain = size_remain - LCD_CLEAR_SEND_NUMBER;
+            }
+            else
+            {
+                size = size_remain;
+                size_remain = 0;
+            }
+        }
+        rt_free(fill_buf);
+    }
+    else
+    {
+        for (i = y_start; i <= y_end; i++)
+        {
+            for (j = x_start; j <= x_end; j++)lcd_write_half_word((*color));
         }
     }
 }

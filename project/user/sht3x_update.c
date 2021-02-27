@@ -27,6 +27,19 @@ void gSht3xUpdateInit(void)
 
 }
 
+static void sht3xguiupdate(signed char tem, unsigned char hum)
+{
+	  char str[13];
+	
+	  sprintf(str, "室内温度:%d℃ ", tem);
+	  
+    lv_label_set_text(label_tem, str);
+	
+	  sprintf(str, "室内湿度:%d%%", hum);
+	  
+    lv_label_set_text(label_hum, str);
+}
+
 extern unsigned char mcu_dp_value_update(unsigned char dpid,unsigned long value);
 static void WifiLedEntry(void *parameter)
 {
@@ -35,6 +48,9 @@ static void WifiLedEntry(void *parameter)
 			  sht3x_read_singleshot(dev);
 			  mcu_dp_value_update(DPID_TEMP_CURRENT, dev->temperature);
 			  mcu_dp_value_update(DPID_HUMIDITY_VALUE, dev->humidity);
+			
+			  sht3xguiupdate(dev->temperature, dev->humidity);
+			  
 		    rt_thread_mdelay(5000);
 		}
 }
