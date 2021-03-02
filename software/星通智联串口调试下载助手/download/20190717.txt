@@ -1,0 +1,2 @@
+G:\2.Alientek\1.公司项目\8.W601开发板\5.ALIENTEK\2.光盘资料\3，程序源码\1，裸机例程\实验1 跑马灯(RGB)实验\BIN\test.FLS
+E:\Template\BIN\test.FLS

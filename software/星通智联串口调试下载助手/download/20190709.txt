@@ -1,0 +1,4 @@
+E:\0.Code\18.W601\1.工程模板\BIN\test.FLS
+E:\0.Code\18.W601\1.工程模板\BIN\secboot.img
+E:\0.Code\18.W601\1.工程模板\BIN\test_GZ.img
+G:\2.Alientek\1.公司项目\8.W601开发板\1.W601官方资料\W60X 客户资料汇总\4_SDK_Develop\WM_SDK_W60X_G3.01.00\WM_SDK\Bin\WM_W600.FLS

@@ -1,0 +1,3 @@
+D:\Project\Tuya-EDA\06_driver_lcd\Bin\rtthread_layout_1M.FLS
+D:\Project\Tuya-EDA\Tuya-EDA\Bin\rtthread_layout_1M.FLS
+D:\Project\Tuya-EDA\RT-Thread_W60X_SDK\examples\06_driver_lcd\Bin\rtthread_layout_1M.FLS

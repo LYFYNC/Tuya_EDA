@@ -1,0 +1,4 @@
+G:\2.Alientek\1.公司项目\8.W601开发板\3.RTT资料\RT-Thread_W60X_SDK\examples\01_basic_led_blink\Bin\rtthread_layout_1M.FLS
+G:\2.Alientek\1.公司项目\8.W601开发板\1.W601官方资料\thingsturn_w600_at_v1.1.6_20190304.fls
+G:\2.Alientek\1.公司项目\8.W601开发板\3.RTT资料\RT-Thread_W60X_SDK\tools\w60x_fal_pt_1M.bin
+G:\2.Alientek\1.公司项目\8.W601开发板\3.RTT资料\RT-Thread_W60X_SDK\tools\rtt_secboot.img
